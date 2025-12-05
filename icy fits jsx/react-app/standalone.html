@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICYFITS - React App</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
+    <style>
+        /* ROOT VARIABLES */
+        :root {
+            --primary-color: #00aeff;
+            --secondary-color: #000000;
+            --secondary-dark: #000000;
+            --white-color: #ffffff;
+            --light-bg: #f5f5f5;
+            --light-text: #777777;
+            --border-color: #e0e0e0;
+
+            --font-small: 0.9em;
+            --font-smaller: 0.75em;
+
+            --fw3: 300;
+            --fw5: 500;
+            --fw6: 600;
+            --fw7: 700;
+            --fw8: 800;
+
+            --trans-bg: background-color 0.3s, color 0.3s;
+        }
+
+        /* GLOBAL ELEMENTS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1em;
+            line-height: 1.5;
+            color: var(--secondary-color);
+            background-color: var(--white-color);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; }
+        strong { font-weight: var(--fw7); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .flexitem { display: flex; align-items: center; }
+        .wrapper { display: flex; justify-content: space-between; align-items: center; }
+
+        .header-top { 
+            background: var(--light-bg); 
+            padding: 0.5rem 0; 
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .main-links { gap: 1.5rem; }
+        .main-links li { cursor: pointer; }
+        .main-links a { padding: 0.3rem 0; display: inline-flex; align-items: center; transition: var(--trans-bg); }
+        .main-links a:hover { color: var(--primary-color); }
+
+        .header-nav { 
+            background: var(--white-color); 
+            border-bottom: 1px solid var(--border-color); 
+            padding: 1rem 0;
+        }
+
+        .left-flexitem { display: flex; align-items: center; gap: 2rem; }
+        .logo .circle { font-weight: var(--fw7); color: var(--primary-color); font-size: 1.2rem; }
+
+        nav ul { display: flex; gap: 2rem; align-items: center; }
+        nav a { padding: 0.5rem; transition: color 0.3s; }
+        nav a:hover { color: var(--primary-color); }
+
+        .flexitem-second-links { display: flex; gap: 1.5rem; }
+        .icon-large { font-size: 1.5rem; cursor: pointer; }
+        .icon-small { margin-left: 0.3rem; font-size: 0.8rem; }
+
+        /* Dropdowns & Mega Menu */
+        .has-child { position: relative; }
+        .has-child > ul,
+        .has-child > .mega { 
+            display: none; 
+            position: absolute; 
+            top: 100%; 
+            left: 0;
+            background: #fff; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            padding: 0.5rem 0;
+            min-width: 150px;
+        }
+
+        .has-child:hover > ul,
+        .has-child:hover > .mega { 
+            display: flex; 
+        }
+
+        .has-child > ul { flex-direction: column; }
+        .has-child > ul li { padding: 0.5rem 1rem; }
+        .has-child > ul li a { display: block; }
+        .has-child > ul li a:hover { color: var(--primary-color); }
+
+        .mega { 
+            gap: 2rem; 
+            flex-direction: row;
+            padding: 1rem;
+            width: max-content;
+        }
+
+        .flexcol { min-width: 150px; }
+        .flexcol h4 { margin-bottom: 0.5rem; font-weight: var(--fw6); }
+        .flexcol ul { flex-direction: column; display: flex; gap: 0.5rem; }
+        .flexcol li { padding: 0.3rem 0; }
+        .flexcol a { display: block; padding: 0.3rem 0; }
+        .flexcol a:hover { color: var(--primary-color); }
+
+        /* Header Main / Search */
+        .header-main {
+            background: var(--white-color);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dpt-head {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .main-text { font-weight: var(--fw5); color: var(--light-text); }
+        .main-text:first-child { font-weight: var(--fw6); color: var(--secondary-color); }
+
+        .search-box { flex: 1; }
+        .search { 
+            display: flex; 
+            gap: 0.5rem; 
+            align-items: center;
+            background: var(--light-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .search input[type="search"] {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .search input[type="search"]::placeholder {
+            color: var(--light-text);
+        }
+
+        .search button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: var(--fw6);
+            transition: opacity 0.3s;
+        }
+
+        .search button:hover {
+            opacity: 0.9;
+        }
+
+        /* Main & Footer */
+        main {
+            min-height: 400px;
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--light-text);
+        }
+
+        footer {
+            background: var(--light-bg);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        footer p { color: var(--light-text); }
+
+        .rating {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        /* ===== PRODUCTS CAROUSEL ===== */
+        .products-section {
+            padding: 3rem 0;
+            background: var(--white-color);
+        }
+
+        .products-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .products-header h2 {
+            font-size: 2rem;
+            font-weight: var(--fw7);
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .products-header p {
+            color: var(--light-text);
+            font-size: 1.1rem;
+        }
+
+        .products-carousel-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .products-carousel {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            flex: 1;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+        }
+
+        .products-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .products-carousel::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .products-carousel::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .carousel-arrow {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .carousel-arrow:hover {
+            background: #0099d4;
+            transform: scale(1.1);
+        }
+
+        .carousel-arrow-left {
+            order: -1;
+        }
+
+        .carousel-arrow-right {
+            order: 1;
+        }
+
+        .product-card-carousel {
+            background: var(--white-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex: 0 0 250px;
+            min-width: 250px;
+            scroll-snap-align: start;
+        }
+
+        .product-card-carousel:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .product-card-carousel .product-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: var(--light-bg);
+            overflow: hidden;
+        }
+
+        .product-card-carousel .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card-carousel:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-card-carousel .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card-carousel:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .product-card-carousel .add-to-cart-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: var(--fw6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .product-card-carousel .add-to-cart-btn:hover {
+            background: #0099d4;
+            transform: scale(1.05);
+        }
+
+        .product-card-carousel .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-card-carousel .product-info h3 {
+            font-size: 1.1rem;
+            font-weight: var(--fw6);
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .product-card-carousel .product-info .category {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .product-card-carousel .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .product-card-carousel .price {
+            font-size: 1.3rem;
+            font-weight: var(--fw7);
+            color: var(--primary-color);
+        }
+
+        .product-card-carousel .rating {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- React & ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script>
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+
+        // Products Component
+        function Products() {
+            const products = [
+                { id: 1, name: 'Jacket', price: 4500, image: 'https://via.placeholder.com/250x300?text=Ice+Jacket', category: 'Outerwear', rating: 4.5 },
+                { id: 2, name: 'Hoodie', price: 2500, image: 'https://via.placeholder.com/250x300?text=Frost+Hoodie', category: 'Tops', rating: 4.8 },
+                { id: 3, name: 'Tee', price: 1500, image: 'https://via.placeholder.com/250x300?text=Cool+Vibes', category: 'Tops', rating: 4.2 },
+                { id: 4, name: 'Sneakers', price: 4500, image: 'https://via.placeholder.com/250x300?text=Arctic+Shoes', category: 'Footwear', rating: 4.7 },
+                { id: 5, name: 'Belt', price: 1200, image: 'https://via.placeholder.com/250x300?text=Chill+Belt', category: 'Accessories', rating: 4.3 },
+                { id: 6, name: 'Bag', price: 2300, image: 'https://via.placeholder.com/250x300?text=Icy+Bag', category: 'Accessories', rating: 4.6 },
+                { id: 7, name: 'Pants', price: 3200, image: 'https://via.placeholder.com/250x300?text=Polar+Pants', category: 'Clothing', rating: 4.4 },
+                { id: 8, name: 'Cap', price: 900, image: 'https://via.placeholder.com/250x300?text=Frostbite+Cap', category: 'Accessories', rating: 4.5 },
+                { id: 9, name: 'Scarf', price: 2100, image: 'https://via.placeholder.com/250x300?text=Snowflake+Scarf', category: 'Accessories', rating: 4.4 },
+                { id: 10, name: 'Gloves', price: 850, image: 'https://via.placeholder.com/250x300?text=Glacier+Gloves', category: 'Accessories', rating: 4.3 }
+            ];
+
+            const scrollCarousel = (direction) => {
+                const carousel = document.querySelector('.products-carousel');
+                const scrollAmount = 300;
+                if (carousel) {
+                    if (direction === 'left') {
+                        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    } else {
+                        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    }
+                }
+            };
+
+            return React.createElement('section', { className: 'products-section' },
+                React.createElement('div', { className: 'products-header' },
+                    React.createElement('h2', null, 'Featured Products'),
+                    React.createElement('p', null, 'Discover our latest ice-cool collection')
+                ),
+                React.createElement('div', { className: 'products-carousel-container' },
+                    React.createElement('button', { className: 'carousel-arrow carousel-arrow-left', onClick: () => scrollCarousel('left') },
+                        React.createElement('i', { className: 'ri-arrow-left-s-line' })
+                    ),
+                    React.createElement('div', { className: 'products-carousel' },
+                        products.map(product =>
+                            React.createElement('div', { key: product.id, className: 'product-card-carousel' },
+                                React.createElement('div', { className: 'product-image' },
+                                    React.createElement('img', { src: product.image, alt: product.name }),
+                                    React.createElement('div', { className: 'product-overlay' },
+                                        React.createElement('button', { className: 'add-to-cart-btn', onClick: () => alert(`${product.name} added to cart!`) }, 'Add to Cart')
+                                    )
+                                ),
+                                React.createElement('div', { className: 'product-info' },
+                                    React.createElement('h3', null, product.name),
+                                    React.createElement('p', { className: 'category' }, product.category),
+                                    React.createElement('div', { className: 'product-footer' },
+                                        React.createElement('span', { className: 'price' }, `$${product.price}`),
+                                        React.createElement('span', { className: 'rating' }, `⭐ ${product.rating}`)
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    React.createElement('button', { className: 'carousel-arrow carousel-arrow-right', onClick: () => scrollCarousel('right') },
+                        React.createElement('i', { className: 'ri-arrow-right-s-line' })
+                    )
+                )
+            );
+        }
+
+        // Footer Component
+        function Footer() {
+            return React.createElement('footer', null,
+                React.createElement('div', { className: 'container' },
+                    React.createElement('p', null, `© ${new Date().getFullYear()} ICYFITS — Footer placeholder`)
+                )
+            );
+        }
+
+        // Search Component
+        function Search() {
+            return React.createElement('div', { className: 'header-main' },
+                React.createElement('div', { className: 'container' },
+                    React.createElement('div', { className: 'wrapper flexitem' },
+                        React.createElement('div', { className: 'left' },
+                            React.createElement('div', { className: 'dpt-cat' },
+                                React.createElement('div', { className: 'dpt-head' },
+                                    React.createElement('div', { className: 'main-text' }, 'All departments'),
+                                    React.createElement('div', { className: 'main-text' }, 'Total 1059 Products')
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'right' },
+                            React.createElement('div', { className: 'search-box' },
+                                React.createElement('form', { action: '', className: 'search' },
+                                    React.createElement('span', { className: 'icon-large' },
+                                        React.createElement('i', { className: 'ri-search-line' })
+                                    ),
+                                    React.createElement('input', { type: 'search', placeholder: 'Search for products' }),
+                                    React.createElement('button', { type: 'submit' }, 'Search')
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+
+        // Nav Component
+        function Nav() {
+            return React.createElement(React.Fragment, null,
+                React.createElement('div', { className: 'header-nav' },
+                    React.createElement('div', { className: 'container' },
+                        React.createElement('div', { className: 'wrapper flexitem' },
+                            React.createElement('div', { className: 'left-flexitem' },
+                                React.createElement('div', { className: 'logo' },
+                                    React.createElement('a', { href: '/' },
+                                        React.createElement('span', { className: 'circle' }, '.Store')
+                                    )
+                                ),
+                                React.createElement('nav', null,
+                                    React.createElement('ul', { className: 'flexitem-second-links' },
+                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Home')),
+                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Shop')),
+                                        React.createElement('li', { className: 'has-child' },
+                                            React.createElement('a', { href: '#' }, 'Brands ', React.createElement('span', { className: 'icon-small' }, React.createElement('i', { className: 'ri-arrow-down-s-line' }))),
+                                            React.createElement('div', { className: 'mega' },
+                                                React.createElement('div', { className: 'flexcol' },
+                                                    React.createElement('h4', null, 'Brands'),
+                                                    React.createElement('ul', null,
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Ami Paris')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Balenciaga')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Burberry')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Chrome Hearts')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Dior')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Essentials')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Gallery Dept')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Moncler')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Off-White')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Palm Angels')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Polo')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Stussy'))
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        React.createElement('li', { className: 'has-child' },
+                                            React.createElement('a', { href: '#' }, 'Categories ', React.createElement('span', { className: 'icon-small' }, React.createElement('i', { className: 'ri-arrow-down-s-line' }))),
+                                            React.createElement('div', { className: 'mega' },
+                                                React.createElement('div', { className: 'flexcol' },
+                                                    React.createElement('h4', null, 'Clothing'),
+                                                    React.createElement('ul', null,
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Tops')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Bottoms')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Outerwear'))
+                                                    )
+                                                ),
+                                                React.createElement('div', { className: 'flexcol' },
+                                                    React.createElement('h4', null, 'Accessories'),
+                                                    React.createElement('ul', null,
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Bags')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Belts')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Hats'))
+                                                    )
+                                                ),
+                                                React.createElement('div', { className: 'flexcol' },
+                                                    React.createElement('h4', null, 'Footwear'),
+                                                    React.createElement('ul', null,
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Sneakers')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Sandals')),
+                                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Boots'))
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Blog')),
+                                        React.createElement('li', null, React.createElement('a', { href: '#' }, 'Contact'))
+                                    )
+                                )
+                            ),
+                            React.createElement('div', { className: 'right' },
+                                React.createElement('ul', { className: 'flexitem-second-links' },
+                                    React.createElement('li', null,
+                                        React.createElement('a', { href: '#' },
+                                            React.createElement('div', { className: 'icon-large' }, React.createElement('i', { className: 'ri-heart-line' })),
+                                            React.createElement('div', { className: 'fly-item' }, React.createElement('span', { className: 'item-number' }, '0'))
+                                        )
+                                    ),
+                                    React.createElement('li', null,
+                                        React.createElement('a', { href: '#', className: 'iscart' },
+                                            React.createElement('div', { className: 'icon-large' }, React.createElement('i', { className: 'ri-shopping-cart-line' }))
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                React.createElement(Search, null)
+            );
+        }
+
+        // Header Component
+        function Header() {
+            return React.createElement('header', null,
+                React.createElement('div', { className: 'header-top' },
+                    React.createElement('div', { className: 'container' },
+                        React.createElement('div', { className: 'wrapper flexitem' },
+                            React.createElement('div', { className: 'left' },
+                                React.createElement('ul', { className: 'flexitem main-links' },
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'Blog')),
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'Featured products')),
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'Wishlist'))
+                                )
+                            ),
+                            React.createElement('div', { className: 'right' },
+                                React.createElement('ul', { className: 'flexitem main-links' },
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'Sign up')),
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'My account')),
+                                    React.createElement('li', null, React.createElement('a', { href: '#' }, 'Order tracking')),
+                                    React.createElement('li', { className: 'has-child' },
+                                        React.createElement('a', { href: '#' }, 'EGP ', React.createElement('span', { className: 'icon-small' }, React.createElement('i', { className: 'ri-arrow-down-s-line' }))),
+                                        React.createElement('ul', null,
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-currency': 'EGP' }, 'EGP - Egyptian Pound')),
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-currency': 'USD' }, 'USD - US Dollar')),
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-currency': 'EUR' }, 'EUR - Euro'))
+                                        )
+                                    ),
+                                    React.createElement('li', { className: 'has-child' },
+                                        React.createElement('a', { href: '#' }, 'English ', React.createElement('span', { className: 'icon-small' }, React.createElement('i', { className: 'ri-arrow-down-s-line' }))),
+                                        React.createElement('ul', null,
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-lang': 'en' }, 'English')),
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-lang': 'ar' }, 'العربية')),
+                                            React.createElement('li', null, React.createElement('a', { href: '#', 'data-lang': 'fr' }, 'Français'))
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                React.createElement(Nav, null)
+            );
+        }
+        // Main App Component
+        function App() {
+            return React.createElement(React.Fragment, null,
+                React.createElement(Header, null),
+                React.createElement('main', null,
+                    React.createElement(Products, null)
+                ),
+                React.createElement(Footer, null)
+            );
+        }
+        // Render the App
+        const rootElement = document.getElementById('root');
+        const root = createRoot(rootElement);
+        root.render(React.createElement(App, null));
+    </script>
+</body>
+</html>

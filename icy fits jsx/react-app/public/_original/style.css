@@ -1,0 +1,48 @@
+/*----------------------------------*/
+/* IMPORT FONTS */
+/*----------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/*----------------------------------*/
+/* ROOT VARIABLES */
+/*----------------------------------*/
+:root {
+    --primary-color: #00aeff;
+    --secondary-color: #000000;
+    --secondary-dark: #000000;
+    --white-color: #ffffff;
+    --light-bg: #f5f5f5;
+    --light-text: #777777;
+    --border-color: #e0e0e0;
+
+    --font-small: 0.9em;
+    --font-smaller: 0.75em;
+
+    --fw3: 300;
+    --fw5: 500;
+    --fw6: 600;
+    --fw7: 700;
+    --fw8: 800;
+
+    --trans-bg: background-color 0.3s, color 0.3s;
+}
+
+/*----------------------------------*/
+/* GLOBAL ELEMENTS */
+/*----------------------------------*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+    background-color: var(--white-color);
+    overflow-x: hidden;
+}
+
+/* (rest of CSS omitted in original attachment) */
